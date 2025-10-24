@@ -1,430 +1,645 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>High-Impact Portfolio: Revenue & Account Management</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-
+    <title>Revenue & Account Management Portfolio</title>
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use Inter as the default sans font --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Define primary-blue using the Tailwind class name convention
+                        'primary-blue': '#1d4ed8', 
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Load Inter Google Font (Replaces Outfit) --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
-        /* --- PROFESSIONAL COLOR PALETTE & TYPOGRAPHY --- */
+        /* Custom styles for the scroll reveal and font */
         :root {
-            --color-primary: #171717; /* Near Black */
-            --color-accent: #3b82f6; /* Subtle Blue Accent */
-            --color-background: #FAFAFA; /* Off-white for premium feel */
+            --primary-blue: #1d4ed8; /* Tailwind blue-700 */
         }
-        
-        /* Applying Outfit (Google Font) family globally */
+
         body {
-            font-family: 'Outfit', sans-serif;
-            color: var(--color-primary);
-            background-color: var(--color-background);
-            scroll-behavior: smooth; 
-        }
-        
-        /* Gradient for emphasis */
-        .text-gradient {
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-image: linear-gradient(to right, #1e40af, #3b82f6);
+            /* Now relying on Tailwind config and font-sans class on body */
+            background-color: #f9fafb; /* light gray/off-white */
         }
 
-        /* --- APPLE-LIKE SCROLL REVEAL EFFECT --- */
-        .scroll-reveal {
+        /* Apple.com-like scroll-reveal effect */
+        .reveal-item {
             opacity: 0;
-            transform: translateY(20px); /* Subtle lift for the reveal */
-            /* Custom cubic-bezier for smooth, dynamic motion */
-            transition: opacity 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-                        transform 1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(30px);
+            transition: opacity 0.7s cubic-bezier(0.2, 0.4, 0.3, 1), transform 0.7s cubic-bezier(0.2, 0.4, 0.3, 1); /* Faster transition for "pop" feel */
+            will-change: opacity, transform;
         }
 
-        /* State when element becomes visible */
-        .scroll-reveal.is-visible {
+        .reveal-item.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Styling for the loading spinner */
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid #fff;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
+        /* --- STAGGERED REVEAL EFFECTS (Sequential Pop) --- */
+        
+        /* Metrics Section Staggering */
+        #metrics .card-item:nth-child(1) { transition-delay: 0.0s; }
+        #metrics .card-item:nth-child(2) { transition-delay: 0.05s; }
+        #metrics .card-item:nth-child(3) { transition-delay: 0.1s; }
+
+        /* Expertise Section Staggering */
+        #expertise .reveal-item:nth-child(1) { transition-delay: 0.0s; }
+        #expertise .reveal-item:nth-child(2) { transition-delay: 0.05s; }
+        #expertise .reveal-item:nth-child(3) { transition-delay: 0.1s; }
+        #expertise .reveal-item:nth-child(4) { transition-delay: 0.15s; }
+        #expertise .reveal-item:nth-child(5) { transition-delay: 0.2s; }
+        #expertise .reveal-item:nth-child(6) { transition-delay: 0.25s; }
+        
+        /* Subtle Embossed Lift/Scale on Hover for Cards */
+        .card-lift-effect {
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .card-lift-effect:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08), 0 6px 6px rgba(0, 0, 0, 0.05);
+            transform: translateY(-4px) scale(1.01);
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(29, 78, 216, 0.4);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+        
+        /* Custom spacing and typography for the subtitle for artistic presentation */
+        .premium-subtitle {
+            letter-spacing: 0.2em; /* Enhanced letter spacing */
+            text-transform: uppercase; /* Makes the text more formal and structured */
+        }
+
+        /* --- Dynamic Floating Arrow (Iconic and Disruptive) --- */
+        @keyframes arrow-float {
+            0% { transform: translate(-50%, 0) scale(1); opacity: 0.2; } /* Start opacity */
+            100% { transform: translate(-50%, -40px) scale(1.15); opacity: 0.4; } /* Increased float distance and scale, more obvious opacity */
+        }
+        
+        .floating-arrow {
+            position: absolute;
+            top: 40%; /* Positioned directly behind the $6.05M text */
+            left: 50%;
+            width: 900px; /* Massive size for desktop */
+            height: 900px;
+            color: #059669; /* Vibrant Tailwind green-600 */
+            opacity: 0.2; 
+            z-index: 0; 
+            animation: arrow-float 4s ease-in-out infinite alternate; 
+            pointer-events: none; 
+            transform: translate(-50%, 0); 
+        }
+
+        /* Responsive sizing adjustment for smaller screens */
+        @media (max-width: 768px) {
+            .floating-arrow {
+                width: 350px; /* Scaled down for mobile */
+                height: 350px;
+                top: 70%; 
+            }
+        }
+        
+        /* --- FLOATING SHAPES CONTAINER (FIXED & SCROLL-DEPENDENT) --- */
+        .floating-shapes-container {
+            position: fixed; /* Fixes position relative to viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0; 
+        }
+
+        .floating-shape {
+            position: absolute;
+            opacity: 0.08; /* Increased opacity for noticeability */
+            transition: transform 0.5s;
+            will-change: transform;
+            /* Use a slight scale/perspective trick for depth effect */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        /* Define new, larger shapes with varied animations (Increased count to 10) */
+        
+        /* Shape 1: Large Circle (Blue) */
+        .shape-1 {
+            width: 200px; /* Bigger */
+            height: 200px;
+            border-radius: 50%;
+            background-color: var(--primary-blue);
+            top: 5%;
+            left: 5%;
+            animation: float-1 18s ease-in-out infinite alternate;
+        }
+
+        /* Shape 2: Large Square (Orange) */
+        .shape-2 {
+            width: 160px; /* Bigger */
+            height: 160px;
+            top: 55%;
+            right: 15%;
+            background-color: #f59e0b; 
+            animation: float-2 20s ease-in-out infinite alternate, rotate-2 30s linear infinite;
+        }
+
+        /* Shape 3: Triangle (Blue) */
+        .shape-3 {
+            width: 0; height: 0;
+            border-left: 140px solid transparent; /* Bigger */
+            border-right: 140px solid transparent;
+            border-bottom: 200px solid var(--primary-blue);
+            background-color: transparent;
+            top: 80%;
+            left: 20%;
+            opacity: 0.1; /* More noticeable */
+            animation: float-3 14s ease-in-out infinite alternate;
+        }
+
+        /* Shape 4: Medium Circle (Orange) */
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #f59e0b; 
+            top: 30%;
+            left: 85%;
+            animation: float-2 16s ease-in-out infinite reverse;
+        }
+
+        /* Shape 5: Medium Square (Blue) */
+        .shape-5 {
+            width: 80px;
+            height: 80px;
+            top: 15%;
+            right: 30%;
+            background-color: var(--primary-blue); 
+            animation: float-1 11s ease-in-out infinite reverse, rotate-2 15s linear infinite;
+        }
+
+        /* Shape 6: Small Circle (Orange) */
+        .shape-6 {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #f59e0b;
+            top: 75%;
+            right: 30%;
+            animation: float-3 9s ease-in-out infinite alternate;
+        }
+        
+        /* Shape 7: Small Triangle (Blue) */
+        .shape-7 {
+            width: 0; height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 70px solid var(--primary-blue);
+            background-color: transparent;
+            top: 40%;
+            left: 15%;
+            opacity: 0.1;
+            animation: float-1 13s ease-in-out infinite reverse;
+        }
+
+        /* Shape 8: Extra Large Circle (Orange) */
+        .shape-8 {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background-color: #f59e0b;
+            bottom: -50px; /* Positioned slightly off-screen */
+            left: 40%;
+            opacity: 0.05;
+            animation: float-2 22s ease-in-out infinite alternate;
+        }
+
+        /* Shape 9: Medium Triangle (Orange) */
+        .shape-9 {
+            width: 0; height: 0;
+            border-left: 70px solid transparent;
+            border-right: 70px solid transparent;
+            border-bottom: 100px solid #f59e0b;
+            background-color: transparent;
+            top: 60%;
+            left: 5%;
+            opacity: 0.08;
+            animation: float-3 17s ease-in-out infinite reverse;
+        }
+
+        /* Shape 10: Small Square (Blue) */
+        .shape-10 {
+            width: 50px;
+            height: 50px;
+            top: 80%;
+            right: 5%;
+            background-color: var(--primary-blue); 
+            animation: float-1 14s ease-in-out infinite alternate, rotate-2 25s linear infinite;
+        }
+        
+        /* Keyframes remain the same for continuous movement */
+        @keyframes float-1 {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(50px) rotate(15deg); }
+        }
+
+        @keyframes float-2 {
+            from { transform: translateY(0) translateX(0); }
+            to { transform: translateY(60px) translateX(30px); }
+        }
+
+        @keyframes rotate-2 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes float-3 {
+            from { transform: translateY(0) scale(1); }
+            to { transform: translateY(55px) scale(0.95); }
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="text-gray-900 font-sans">
 
-    <!-- HEADER & NAVIGATION -->
-    <header class="bg-white shadow-lg sticky top-0 z-10 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black tracking-tight text-gray-900">Revenue Architect</h1>
-            <nav class="hidden sm:block">
-                <a href="#metrics" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition duration-300 ml-6">Metrics</a>
-                <a href="#leadership" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition duration-300 ml-6">Leadership</a>
-                <a href="#skills" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition duration-300 ml-6">Expertise</a>
-                <a href="#simulator" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition duration-300 ml-6">Simulator</a> 
-                <a href="#contact" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition duration-300 ml-6">Connect</a> 
-            </nav>
-        </div>
+    <!-- Custom SVG Definitions (Hidden) --><svg width="0" height="0" style="position:absolute; visibility:hidden;">
+        <!-- 1. Executive Relationship Building (Nested Circles/Flow) --><symbol id="icon-handshake" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" stroke-dasharray="2 4"/>
+            <circle cx="12" cy="12" r="5" fill="none"/>
+            <path d="M16 8 L8 16"/>
+        </symbol>
+        <!-- 2. Cross-Functional Coordination (Clean Lines) --><symbol id="icon-cross-path" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12h16M12 4v16"/>
+            <path d="M12 4 L16 8 M12 4 L8 8"/>
+            <path d="M12 20 L16 16 M12 20 L8 16"/>
+        </symbol>
+        <!-- 3. Full Sales Cycle (Continuous Flow) --><symbol id="icon-kanban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="4"/>
+            <path d="M12 3v18"/>
+            <path d="M3 12h18"/>
+            <circle cx="12" cy="12" r="3" fill="none"/>
+        </symbol>
+        <!-- 4. Pipeline Generation & SDR Support (Targeted Beam) --><symbol id="icon-funnel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M7 10h10M10 14h4"/>
+            <path d="M12 18V6"/>
+        </symbol>
+        <!-- 5. High-Performance Team Development (Interacting Waves) --><symbol id="icon-team" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 19c2 0 4-1 6-1s4 1 6 1s4-1 6-1"/>
+            <path d="M2 15c2 0 4-1 6-1s4 1 6 1s4-1 6-1"/>
+            <circle cx="12" cy="5" r="3"/>
+        </symbol>
+        <!-- 6. Scalable Support Systems (Abstract Network/Structure) --><symbol id="icon-gears" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <path d="M3 12h18M12 3v18"/>
+            <path d="M18 6L6 18M6 6L18 18"/>
+        </symbol>
+        <!-- 7. Floating Arrow Up (For Hero Background - Stroke Width Increased to 3) --><symbol id="icon-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"/>
+        </symbol>
+    </svg>
+
+    <!-- Header & Navigation --><header class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="#" class="text-2xl font-extrabold text-gray-900 tracking-tight">Revenue Acumen.</a>
+                <div class="flex space-x-6 text-sm font-medium">
+                    <a href="#metrics" class="text-gray-600 hover:text-primary-blue transition duration-300">Metrics</a>
+                    <a href="#expertise" class="text-gray-600 hover:text-primary-blue transition duration-300">Expertise</a>
+                    <a href="#toolkit" class="text-gray-600 hover:text-primary-blue transition duration-300">Toolkit</a>
+                    <a href="#contact" class="text-gray-600 hover:text-primary-blue transition duration-300">Contact</a>
+                </div>
+            </div>
+        </nav>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
 
-        <!-- HERO SECTION -->
-        <section class="text-center mb-24">
-            <h2 class="text-6xl sm:text-7xl font-extrabold tracking-tighter text-gray-900 mb-6">
-                The <span class="text-gradient">Scalable Growth</span> Leader
-            </h2>
-            <p class="text-2xl text-gray-600 max-w-4xl mx-auto font-light">
-                $6.05 Million revenue driven. Architecting commercial success through strategic account management, system optimization, and high-performance team development.
-            </p>
-        </section>
-
-        <!-- CORE METRICS SECTION -->
-        <a id="metrics"></a>
-        <section class="bg-white shadow-2xl rounded-3xl p-8 sm:p-12 mb-24 border-t-8 border-blue-500/80">
-            <h3 class="text-4xl font-bold text-gray-900 mb-12 text-center scroll-reveal" data-delay="0">Core Commercial Impact</h3>
+        <!-- --- FLOATING SHAPES CONTAINER (FIXED & SCROLL-DEPENDENT) --- --><!-- Placed here to ensure it is fixed to the viewport but z-index 0 --><div class="floating-shapes-container">
+            <!-- Shape 1: Large Circle (Blue) --><div class="floating-shape shape-1"></div>
+            <!-- Shape 2: Large Square (Orange) --><div class="floating-shape shape-2"></div>
+            <!-- Shape 3: Triangle (Blue) --><div class="floating-shape shape-3"></div>
+            <!-- Shape 4: Medium Circle (Orange) --><div class="floating-shape shape-4"></div>
+            <!-- Shape 5: Medium Square (Blue) --><div class="floating-shape shape-5"></div>
+            <!-- Shape 6: Small Circle (Orange) --><div class="floating-shape shape-6"></div>
+            <!-- Shape 7: Small Triangle (Blue) --><div class="floating-shape shape-7"></div>
+            <!-- Shape 8: Extra Large Circle (Orange) --><div class="floating-shape shape-8"></div>
+            <!-- Shape 9: Medium Triangle (Orange) --><div class="floating-shape shape-9"></div>
+            <!-- Shape 10: Small Square (Blue) --><div class="floating-shape shape-10"></div>
+        </div>
+        <!-- ------------------------------------------------------------- --><!-- 1. Hero Section (Iconic Green Arrow Backdrop) --><section id="hero" class="text-center py-24 reveal-item relative overflow-hidden">
+             <!-- Dynamic Floating Arrow Background (Iconic) --><div class="floating-arrow" aria-hidden="true">
+                <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <use xlink:href="#icon-arrow-up"></use>
+                </svg>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-                
-                <!-- METRIC CARD 1 -->
-                <div class="scroll-reveal" data-delay="100">
-                    <div class="bg-blue-50/70 p-8 rounded-2xl shadow-xl border border-blue-100 transform transition duration-500 hover:scale-[1.01] hover:shadow-2xl">
-                        <p class="text-5xl sm:text-6xl font-black text-blue-700 mb-3">$6.05M</p>
-                        <p class="text-xl font-semibold text-gray-800">Record Quarterly Revenue</p>
-                        <p class="text-sm text-gray-500 mt-2">Q4 2024</p>
-                    </div>
-                </div>
-
-                <!-- METRIC CARD 2 -->
-                <div class="scroll-reveal" data-delay="250">
-                    <div class="bg-green-50/70 p-8 rounded-2xl shadow-xl border border-green-100 transform transition duration-500 hover:scale-[1.01] hover:shadow-2xl">
-                        <p class="text-5xl sm:text-6xl font-black text-green-700 mb-3">+$550K</p>
-                        <p class="text-xl font-semibold text-gray-800">Target Exceeded</p>
-                        <p class="text-sm text-gray-500 mt-2">Surpassed quarterly goal by 10%</p>
-                    </div>
-                </div>
-
-                <!-- METRIC CARD 3 -->
-                <div class="scroll-reveal" data-delay="400">
-                    <div class="bg-indigo-50/70 p-8 rounded-2xl shadow-xl border border-indigo-100 transform transition duration-500 hover:scale-[1.01] hover:shadow-2xl">
-                        <p class="text-5xl sm:text-6xl font-black text-indigo-700 mb-3">+$1M</p>
-                        <p class="text-xl font-semibold text-gray-800">Personal Best Increase</p>
-                        <p class="text-sm text-gray-500 mt-2">Quarter-over-quarter growth</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- LEADERSHIP SECTION -->
-        <a id="leadership"></a>
-        <section class="mb-24">
-            <h3 class="text-4xl font-bold text-gray-900 mb-12 text-center scroll-reveal" data-delay="0">Strategic Leadership & Scalability</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                
-                <!-- LEADERSHIP CARD 1 -->
-                <div class="scroll-reveal" data-delay="100">
-                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition duration-500 hover:scale-[1.01] hover:shadow-2xl">
-                        <svg class="w-10 h-10 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-5a3 3 0 00-3-3H8a3 3 0 00-3 3v5H1m16 0c0-4.418-3.582-8-8-8s-8 3.582-8 8m14-4a5 5 0 00-5-5h-2a5 5 0 00-5 5"></path></svg>
-                        <h4 class="text-2xl font-bold text-gray-900 mb-3">High-Performance Team Development</h4>
-                        <p class="text-gray-600 leading-relaxed">
-                            Passionate about developing teams through 1:1 coaching, targeted projects to enhance **technical skills**, and a focus on **career advancement**. This creates a multiplier effect on revenue capacity.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- LEADERSHIP CARD 2 -->
-                <div class="scroll-reveal" data-delay="250">
-                    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 transform transition duration-500 hover:scale-[1.01] hover:shadow-2xl">
-                        <svg class="w-10 h-10 text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-4m0 0a2 2 0 10-4 0v4m4 0a2 2 0 114 0v-4m-4 0h4m-4 0v-2m4 2v-2m-4-2h4m-4 0V9m4 4v2m-4-4V9m4 0h4m-4 0v-2m4 2v-2m-4 0h4m-4 0V7m4 0v-2m-4 0h4m-4 0V5m4 0v-2m-4 0h4m-4 0V3m4 0v-2m-4 0h4m-4 0V1"></path></svg>
-                        <h4 class="text-2xl font-bold text-gray-900 mb-3">Scalable Support Systems</h4>
-                        <p class="text-gray-600 leading-relaxed">
-                            Built and refined scalable support systems to empower **sales success**. Focus on business continuity initiatives and sustaining growth by multiplying influence through people development.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SKILLS SECTION -->
-        <a id="skills"></a>
-        <section class="mb-24">
-            <h3 class="text-4xl font-bold text-gray-900 mb-12 text-center scroll-reveal" data-delay="0">Core Account Management Expertise</h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-                
-                <!-- SKILL CARD 1 -->
-                <div class="scroll-reveal" data-delay="100">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center transform transition duration-500 hover:scale-[1.03] hover:shadow-xl">
-                        <svg class="w-8 h-8 text-pink-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2h-4v3"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <strong class="text-sm font-semibold text-gray-800">Executive Relationship Building</strong>
-                    </div>
-                </div>
-
-                <!-- SKILL CARD 2 -->
-                <div class="scroll-reveal" data-delay="150">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center transform transition duration-500 hover:scale-[1.03] hover:shadow-xl">
-                        <svg class="w-8 h-8 text-yellow-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8"></path></svg>
-                        <strong class="text-sm font-semibold text-gray-800">Accurate Forecasting</strong>
-                    </div>
-                </div>
-
-                <!-- SKILL CARD 3 -->
-                <div class="scroll-reveal" data-delay="200">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center transform transition duration-500 hover:scale-[1.03] hover:shadow-xl">
-                        <svg class="w-8 h-8 text-cyan-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        <strong class="text-sm font-semibold text-gray-800">Cross-Functional Coordination</strong>
-                    </div>
-                </div>
-
-                <!-- SKILL CARD 4 -->
-                <div class="scroll-reveal" data-delay="250">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center transform transition duration-500 hover:scale-[1.03] hover:shadow-xl">
-                        <svg class="w-8 h-8 text-orange-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-2.25M7 11.5h6.5M7 14h6.5M13.5 8h4.75V11.5M13.5 11.5h4.75M13.5 14h4.75V11.5"></path></svg>
-                        <strong class="text-sm font-semibold text-gray-800">CRM/Support System Proficiency</strong>
-                    </div>
-                </div>
-
-                <!-- SKILL CARD 5 -->
-                <div class="scroll-reveal" data-delay="300">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center transform transition duration-500 hover:scale-[1.03] hover:shadow-xl">
-                        <svg class="w-8 h-8 text-red-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <strong class="text-sm font-semibold text-gray-800">Full Sales Cycle Management</strong>
-                    </div>
-                </div>
-
-                <!-- SKILL CARD 6 -->
-                <div class="scroll-reveal" data-delay="350">
-                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center transform transition duration-500 hover:scale-[1.03] hover:shadow-xl">
-                        <svg class="w-8 h-8 text-green-500 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6a2 2 0 00-2-2H5a2 2 0 00-2 2v13M14 17h2a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4 10h2a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path></svg>
-                        <strong class="text-sm font-semibold text-gray-800">Pipeline Generation & SDR Support</strong>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- STRATEGIC INSIGHT SIMULATOR (GEMINI API) -->
-        <a id="simulator"></a>
-        <section class="mb-24 scroll-reveal" data-delay="0">
-            <h3 class="text-4xl font-bold text-gray-900 mb-8 text-center">Strategic Insight Simulator ✨</h3>
-            <div class="max-w-3xl mx-auto bg-white p-8 rounded-3xl shadow-2xl border border-gray-200">
-                <p class="text-gray-600 mb-6 text-center">
-                    Demonstrate my strategic thinking. Input a complex revenue or account management challenge, and I will generate an executive-level recommendation using the Gemini API.
+            <div class="max-w-5xl mx-auto relative z-10">
+                <h1 class="text-6xl md:text-8xl font-black mb-6 leading-tight tracking-tighter">
+                    <!-- Refined Subtitle for Artistic Look: darker gray, uppercase, wider tracking, and increased bottom margin (mb-10) --><span class="block text-gray-700 font-semibold text-xl md:text-2xl mb-10 premium-subtitle">ACCOUNT MANAGEMENT & SALES ENGINEERING</span>
+                    <!-- The arrow's top: 40% CSS property ensures it sits behind this bold line --><strong>$6.05 Million Revenue Driven.</strong>
+                </h1>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Achieving enterprise goals through strategic account expansion, consultative selling, and <strong>high-performance cross-functional coordination.</strong>
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                    <input type="text" id="challengeInput" placeholder="e.g., How to upsell enterprise clients 30 days post-onboarding?" class="flex-grow p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="generateInsight" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 transition duration-300 flex items-center justify-center">
-                        <span id="insightButtonText">Generate Recommendation</span>
-                        <div id="insightSpinner" class="spinner hidden ml-3"></div>
+            </div>
+        </section>
+
+        <!-- 2. Key Metrics Cards (Highlighted Container) --><section id="metrics" class="py-16">
+            <!-- New Highlighted Container for Metrics --><div class="bg-white p-6 md:p-10 rounded-2xl shadow-2xl border border-primary-blue/10 reveal-item">
+                <h2 class="text-2xl font-bold text-center text-primary-blue mb-10">Key Revenue Milestones</h2>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Metric 1: Record Revenue --><div class="p-6 bg-gray-50 border border-gray-100 rounded-xl card-lift-effect card-item reveal-item">
+                        <p class="text-xs font-semibold uppercase text-primary-blue mb-2">Quarterly Performance</p>
+                        <h2 class="text-5xl font-extrabold text-gray-900">$6.05M</h2>
+                        <p class="mt-4 text-gray-600">
+                            Achieved highest <strong>Record Quarterly Revenue</strong> through strategic enterprise renewals and upsells in a challenging market.
+                        </p>
+                    </div>
+                    <!-- Metric 2: Target Exceeded --><div class="p-6 bg-gray-50 border border-gray-100 rounded-xl card-lift-effect card-item reveal-item">
+                        <p class="text-xs font-semibold uppercase text-primary-blue mb-2">Quota Attainment</p>
+                        <h2 class="text-5xl font-extrabold text-gray-900">+$550K</h2>
+                        <p class="mt-4 text-gray-600">
+                            <strong>Target Exceeded</strong> by 10% through precise forecasting and consistent execution across the full sales cycle.
+                        </p>
+                    </div>
+                    <!-- Metric 3: Personal Best --><div class="p-6 bg-gray-50 border border-gray-100 rounded-xl card-lift-effect card-item reveal-item">
+                        <p class="text-xs font-semibold uppercase text-primary-blue mb-2">Expansion Growth</p>
+                        <h2 class="text-5xl font-extrabold text-gray-900">+$1M</h2>
+                        <p class="mt-4 text-gray-600">
+                            <strong>Personal Best Increase</strong> in total contract value (TCV) captured from a single major account expansion.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Core Account Management Expertise (Staggered Pop with Enhanced Icon Interaction) --><section id="expertise" class="py-24">
+            <h2 class="text-4xl font-extrabold text-center mb-16 reveal-item">Core Account Management Expertise</h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Skill 1: Executive Relationship Building (Nested Circles/Flow) --><div class="p-6 bg-white border border-gray-100 rounded-xl shadow-md card-lift-effect reveal-item group">
+                    <svg class="w-12 h-12 mb-4 text-gray-500 group-hover:text-primary-blue transition duration-500 transform group-hover:scale-110 group-hover:rotate-3" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <use xlink:href="#icon-handshake"></use>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">Executive Relationship Building</h3>
+                    <p class="text-gray-600 text-sm">Cultivating trusted, long-term relationships with C-suite and VP-level stakeholders to drive strategic alignment.</p>
+                </div>
+
+                <!-- Skill 2: Cross-Functional Coordination (Clean Lines) --><div class="p-6 bg-white border border-gray-100 rounded-xl shadow-md card-lift-effect reveal-item group">
+                    <svg class="w-12 h-12 mb-4 text-gray-500 group-hover:text-primary-blue transition duration-500 transform group-hover:scale-110 group-hover:rotate-3" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <use xlink:href="#icon-cross-path"></use>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">Cross-Functional Coordination</h3>
+                    <p class="text-gray-600 text-sm">Leading complex projects by coordinating Sales Engineering, Product, and Support teams for seamless delivery.</p>
+                </div>
+
+                <!-- Skill 3: Full Sales Cycle Management (Continuous Flow) --><div class="p-6 bg-white border border-gray-100 rounded-xl shadow-md card-lift-effect reveal-item group">
+                    <svg class="w-12 h-12 mb-4 text-gray-500 group-hover:text-primary-blue transition duration-500 transform group-hover:scale-110 group-hover:rotate-3" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <use xlink:href="#icon-kanban"></use>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">Full Sales Cycle Management</h3>
+                    <p class="text-gray-600 text-sm">Proficient from initial discovery and technical validation through negotiation, closing, and post-sale expansion.</p>
+                </div>
+
+                <!-- Skill 4: Pipeline Generation & SDR Support (Targeted Beam) --><div class="p-6 bg-white border border-gray-100 rounded-xl shadow-md card-lift-effect reveal-item group">
+                    <svg class="w-12 h-12 mb-4 text-gray-500 group-hover:text-primary-blue transition duration-500 transform group-hover:scale-110 group-hover:rotate-3" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <use xlink:href="#icon-funnel"></use>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">Pipeline Generation & Support</h3>
+                    <p class="text-gray-600 text-sm">Proactive pipeline creation, coaching SDRs, and identifying high-value opportunities within existing accounts.</p>
+                </div>
+
+                <!-- Skill 5: High-Performance Team Development (Interacting Waves) --><div class="p-6 bg-white border border-gray-100 rounded-xl shadow-md card-lift-effect reveal-item group">
+                    <svg class="w-12 h-12 mb-4 text-gray-500 group-hover:text-primary-blue transition duration-500 transform group-hover:scale-110 group-hover:rotate-3" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <use xlink:href="#icon-team"></use>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">High-Performance Team Development</h3>
+                    <p class="text-gray-600 text-sm">Mentoring sales and engineering cohorts, fostering accountability, and establishing continuous improvement programs.</p>
+                </div>
+
+                <!-- Skill 6: Scalable Support Systems (Abstract Network/Structure) --><div class="p-6 bg-white border border-gray-100 rounded-xl shadow-md card-lift-effect reveal-item group">
+                    <svg class="w-12 h-12 mb-4 text-gray-500 group-hover:text-primary-blue transition duration-500 transform group-hover:scale-110 group-hover:rotate-3" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <use xlink:href="#icon-gears"></use>
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-2">Scalable Support Systems</h3>
+                    <p class="text-gray-600 text-sm">Designing and implementing technical documentation and tools that enable rapid account onboarding and support.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. Strategic Acumen Toolkit (Gemini API Integration) --><section id="toolkit" class="py-24 bg-gray-100 rounded-3xl reveal-item border-t border-b border-gray-200">
+            <h2 class="text-4xl font-extrabold text-center mb-16 reveal-item">Strategic Acumen Toolkit ✨</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">Leverage Generative AI to quickly access executive insights and high-level strategic planning, demonstrating a foundation in <strong>Strategic Acumen</strong> and <strong>LLM Integration</strong>.</p>
+
+            <div class="grid lg:grid-cols-2 gap-8 px-4">
+                <!-- Tool 1: Executive Persona Insight --><div class="bg-white p-6 rounded-xl shadow-xl card-lift-effect reveal-item">
+                    <h3 class="text-2xl font-bold mb-4 text-primary-blue">1. Executive Persona Insight</h3>
+                    <p class="text-sm text-gray-500 mb-4">Identify top 3 pain points and a key 12-month priority for any executive role.</p>
+                    <input type="text" id="executiveRole" placeholder="e.g., CMO of a DTC brand" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-blue focus:border-primary-blue mb-4">
+                    <button onclick="getExecutiveInsights()" class="w-full bg-primary-blue text-white p-3 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">
+                        Analyze Persona
                     </button>
+                    <div id="execResult" class="mt-4 p-4 min-h-20 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 whitespace-pre-wrap text-sm">
+                        Waiting for role input...
+                    </div>
                 </div>
-                
-                <div id="insightOutput" class="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 min-h-[100px] hidden">
-                    <p class="text-lg font-semibold text-gray-800 mb-2">Executive Strategy:</p>
-                    <div id="insightText" class="text-gray-700 whitespace-pre-wrap"></div>
-                </div>
-                <div id="insightError" class="mt-4 p-3 text-sm text-red-700 bg-red-100 rounded-lg hidden"></div>
-            </div>
-        </section>
-        
-        <!-- CALL TO ACTION SECTION -->
-        <a id="contact"></a>
-        <section class="text-center bg-gray-900 text-white p-12 rounded-3xl mb-16 scroll-reveal" data-delay="0">
-            <h3 class="text-4xl font-bold mb-4">Ready to Drive Transformative Revenue?</h3>
-            <p class="text-xl font-light mb-8 opacity-90">Choose your preferred way to initiate a conversation about a new opportunity.</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-6">
-                
-                <!-- CTA 1: Email -->
-                <a href="mailto:leojr.lozada@gmail.com?subject=Let's%20Connect%20for%20a%20Job%20Opportunity" 
-                   id="emailCta"
-                   onclick="handleEmailClick(event)"
-                   class="inline-flex items-center justify-center bg-white text-gray-900 font-bold py-4 px-10 rounded-full shadow-lg transition duration-300 hover:bg-gray-100 hover:shadow-xl transform hover:scale-[1.02]">
-                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-10 12l-7-7"></path></svg>
-                    Send Email Invite
-                </a>
 
-                <!-- CTA 2: LinkedIn Chat -->
-                <a href="https://www.linkedin.com/in/leolozada/" target="_blank" 
-                   id="linkedinCta"
-                   onclick="handleLinkedInClick(event)"
-                   class="inline-flex items-center justify-center bg-blue-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transition duration-300 hover:bg-blue-700 hover:shadow-xl transform hover:scale-[1.02]">
-                    <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.568v-5.27c0-1.25-.022-2.85-1.742-2.85-1.744 0-2.007 1.36-2.007 2.76v5.36H9.08V9.298h3.424v1.57h.048c.477-.899 1.635-1.84 3.37-1.84 3.601 0 4.276 2.37 4.276 5.44v6.182zm-16.14-11.458a2.593 2.593 0 01-2.592-2.591c0-1.428 1.163-2.591 2.592-2.591s2.59 1.163 2.59 2.591c0 1.428-1.162 2.591-2.59 2.591zm-1.82 11.458H5.88v-11.45h-3.424v11.45zM22.25 0H1.75C.783 0 0 .783 0 1.75v20.5C0 23.217.783 24 1.75 24h20.5c.967 0 1.75-.783 1.75-1.75V1.75c0-.967-.783-1.75-1.75-1.75z"></path></svg>
-                    Chat on LinkedIn
-                </a>
+                <!-- Tool 2: Revenue Strategy Blueprint --><div class="bg-white p-6 rounded-xl shadow-xl card-lift-effect reveal-item">
+                    <h3 class="text-2xl font-bold mb-4 text-primary-blue">2. Revenue Strategy Blueprint</h3>
+                    <p class="text-sm text-gray-500 mb-4">Generate a concise, VP-level strategic recommendation/outline for a business challenge.</p>
+                    <textarea id="businessChallenge" rows="3" placeholder="e.g., High churn rate in mid-market accounts due to poor integration." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary-blue focus:border-primary-blue mb-4"></textarea>
+                    <button onclick="generateRevenueStrategy()" class="w-full bg-primary-blue text-white p-3 rounded-lg font-semibold hover:bg-blue-800 transition duration-300">
+                        Generate Strategy
+                    </button>
+                    <div id="strategyResult" class="mt-4 p-4 min-h-20 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 whitespace-pre-wrap text-sm">
+                        Waiting for challenge input...
+                    </div>
+                </div>
             </div>
         </section>
 
+        <!-- 5. Call to Action (Dual CTA) --><section id="contact" class="text-center py-24 reveal-item">
+            <h2 class="text-4xl font-extrabold mb-4">Ready to Drive Record Revenue?</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-10">Let's discuss how my experience in enterprise account management and strategic sales can immediately impact your bottom line.</p>
+
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <!-- CTA 1: LinkedIn Chat Button (Primary) --><a href="https://www.linkedin.com/in/leolozada/" target="_blank" onclick="trackConversion('LinkedIn_Connect')" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-bold rounded-full shadow-lg text-white bg-primary-blue hover:bg-blue-800 transition duration-300 transform hover:scale-105">
+                    Connect on LinkedIn
+                </a>
+
+                <!-- CTA 2: Email Invite Button (Secondary) --><a href="mailto:leojr.lozada@gmail.com?subject=Let%27s%20Connect%20for%20a%20Job%20Opportunity." onclick="trackConversion('Email_Outreach')" class="inline-flex items-center justify-center px-8 py-4 border border-gray-300 text-lg font-bold rounded-full shadow-lg text-gray-900 bg-white hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                    Send a Direct Email
+                </a>
+            </div>
+        </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-gray-200">
-        <div class="flex justify-between items-center flex-col sm:flex-row">
-            <p class="text-sm text-gray-500 mb-4 sm:mb-0">&copy; 2025 Revenue Architect Portfolio. All rights reserved.</p>
-            <a href="https://www.linkedin.com/in/leolozada/" target="_blank" aria-label="LinkedIn Profile">
-                <svg class="w-6 h-6 text-gray-500 hover:text-blue-600 transition duration-300" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.568v-5.27c0-1.25-.022-2.85-1.742-2.85-1.744 0-2.007 1.36-2.007 2.76v5.36H9.08V9.298h3.424v1.57h.048c.477-.899 1.635-1.84 3.37-1.84 3.601 0 4.276 2.37 4.276 5.44v6.182zm-16.14-11.458a2.593 2.593 0 01-2.592-2.591c0-1.428 1.163-2.591 2.592-2.591s2.59 1.163 2.59 2.591c0 1.428-1.162 2.591-2.59 2.591zm-1.82 11.458H5.88v-11.45h-3.424v11.45zM22.25 0H1.75C.783 0 0 .783 0 1.75v20.5C0 23.217.783 24 1.75 24h20.5c.967 0 1.75-.783 1.75-1.75V1.75c0-.967-.783-1.75-1.75-1.75z"></path></svg>
+    <!-- Footer --><footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center text-sm">
+            <!-- LinkedIn Social Icon Only --><a href="https://www.linkedin.com/in/leolozada/" target="_blank" aria-label="LinkedIn Profile" class="text-gray-400 hover:text-blue-400 transition duration-300">
+                <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
             </a>
         </div>
     </footer>
 
-    <script>
-        // Set up global variables for Firebase and API key (required for Canvas)
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const apiKey = ""; // API key is handled by the Canvas environment
 
-        // --- CONVERSION TRACKING (GTM) SIMULATION ---
+    <script>
+        // --- Core JavaScript Functions ---
+
+        // 1. Firebase/Gemini API Configuration and Setup
+        const API_URL_BASE = 'https://generativelanguage.googleapis.com/v1beta/models/';
+        const MODEL = 'gemini-2.5-flash-preview-09-2025';
+        // The API key is provided by the canvas environment
+        const apiKey = typeof __api_key !== 'undefined' ? __api_key : "";
 
         /**
-         * Simulates a GTM dataLayer push for conversion tracking.
-         * @param {string} eventName - The event name to track.
+         * Generic Gemini API caller with exponential backoff and grounding.
+         * @param {string} prompt - The user query.
+         * @param {string} systemInstruction - The LLM's persona/role.
+         * @returns {Promise<string>} The generated text response.
          */
-        function trackConversion(eventName) {
-            console.log(`[CONVERSION TRACKING]: Firing event: ${eventName}`);
-            // In a live environment, you would uncomment the actual GTM/dataLayer push here:
-            // window.dataLayer = window.dataLayer || [];
-            // window.dataLayer.push({
-            //     'event': 'cta_click',
-            //     'cta_type': eventName
-            // });
-        }
-
-        function handleEmailClick(event) {
-            trackConversion('email_invite_lead');
-            // Allow the default mailto action to proceed
-        }
-
-        function handleLinkedInClick(event) {
-            trackConversion('linkedin_chat_lead');
-            // Allow the default link action to proceed
-        }
-
-        // --- SCROLL REVEAL LOGIC (Intersection Observer) ---
-
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                const delay = parseInt(entry.target.getAttribute('data-delay')) || 0;
-                
-                if (entry.isIntersecting) {
-                    // Staggered reveal when scrolling into view
-                    setTimeout(() => {
-                        entry.target.classList.add('is-visible');
-                    }, delay);
-                } else {
-                    // Hide element when scrolling out of view (for bidirectional effect)
-                    entry.target.classList.remove('is-visible');
-                }
-            });
-        }, {
-            // Root margin adjusts when the observer triggers. 
-            rootMargin: '0px 0px -100px 0px',
-            threshold: 0.1 // Triggers when 10% of the item is visible
-        });
-
-        // Target all elements with the 'scroll-reveal' class
-        document.querySelectorAll('.scroll-reveal').forEach(el => {
-            observer.observe(el);
-        });
-
-
-        // --- GEMINI API CALL LOGIC ---
-
-        document.getElementById('generateInsight').addEventListener('click', async () => {
-            const prompt = document.getElementById('challengeInput').value;
-            const outputDiv = document.getElementById('insightOutput');
-            const outputText = document.getElementById('insightText');
-            const errorDiv = document.getElementById('insightError');
-            const button = document.getElementById('generateInsight');
-            const buttonText = document.getElementById('insightButtonText');
-            const spinner = document.getElementById('insightSpinner');
-
-            if (!prompt) {
-                alert('Please enter a business challenge.');
-                return;
-            }
-
-            // UI Feedback: Start Loading State
-            buttonText.textContent = 'Generating...';
-            spinner.classList.remove('hidden');
-            button.disabled = true;
-            outputDiv.classList.add('hidden');
-            errorDiv.classList.add('hidden');
-            outputText.textContent = 'Analyzing challenge and formulating strategy...';
-            outputDiv.classList.remove('hidden');
-
-            const systemPrompt = "You are a VP of Revenue Strategy. Your task is to provide a concise, high-level strategic recommendation (2-3 sentences max) for the user's business challenge. Focus on actionable, executive-level insights.";
-            const userQuery = `Business Challenge: ${prompt}`;
-            
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        async function callGeminiApi(prompt, systemInstruction) {
+            const url = `${API_URL_BASE}${MODEL}:generateContent?key=${apiKey}`;
 
             const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }], // Use search grounding for up-to-date insights
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] },
+                tools: [{ "google_search": {} }],
             };
 
-            const maxRetries = 3;
-            let attempt = 0;
-            let result = null;
-
-            while (attempt < maxRetries) {
+            for (let i = 0; i < 3; i++) {
                 try {
-                    const response = await fetch(apiUrl, {
+                    const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
 
                     if (!response.ok) {
-                        throw new Error(`API returned status ${response.status}`);
+                        if (response.status === 429 && i < 2) {
+                            console.warn(`Rate limit hit, retrying in ${Math.pow(2, i)}s...`);
+                            await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                            continue;
+                        }
+                        throw new Error(`API error: ${response.status} ${response.statusText}`);
                     }
-                    
-                    result = await response.json();
-                    break; // Success, exit loop
 
-                } catch (e) {
-                    attempt++;
-                    if (attempt >= maxRetries) {
-                        console.error("Gemini API call failed after max retries:", e);
-                        errorDiv.textContent = `Error: Failed to generate insight. Please try again.`;
-                        errorDiv.classList.remove('hidden');
-                        break;
-                    }
-                    // Exponential backoff
-                    const delay = Math.pow(2, attempt) * 1000;
-                    await new Promise(resolve => setTimeout(resolve, delay));
+                    const result = await response.json();
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text || "No strategic content generated. Try rephrasing.";
+
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    if (i === 2) throw new Error("Gemini API failed after multiple retries.");
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
                 }
             }
+        }
 
+        // 2. LLM Demo 1: Executive Persona Insight (Updated logic)
+        async function getExecutiveInsights() {
+            const roleInput = document.getElementById('executiveRole');
+            const resultDiv = document.getElementById('execResult');
+            const role = roleInput.value.trim();
 
-            // UI Feedback: End Loading State
-            buttonText.textContent = 'Generate Recommendation';
-            spinner.classList.add('hidden');
-            button.disabled = false;
-            
-            if (result && result.candidates && result.candidates.length > 0 && result.candidates[0].content?.parts?.[0]?.text) {
-                const text = result.candidates[0].content.parts[0].text;
-                outputText.textContent = text;
-            } else if (!errorDiv.classList.contains('hidden')) {
-                // Error already displayed by the catch block
-            } else {
-                 errorDiv.textContent = `Error: Could not process the response from the AI.`;
-                 errorDiv.classList.remove('hidden');
+            if (!role) {
+                resultDiv.innerHTML = "Please enter an executive role (e.g., CMO, CFO).";
+                return;
             }
-        });
 
+            resultDiv.innerHTML = '<span class="text-primary-blue">Analyzing strategic priorities... (This may take a moment)</span>';
+            const prompt = `Identify and concisely summarize the top 3 core pain points AND the single most critical 12-month strategic priority for a person in the role of "${role}". Format the output as a clear list.`;
+            const systemInstruction = "You are a top-tier management consultant specializing in enterprise strategy. Provide clear, direct, and actionable insights relevant to a large B2B technology company.";
+
+            try {
+                const responseText = await callGeminiApi(prompt, systemInstruction);
+                resultDiv.innerText = responseText;
+            } catch (e) {
+                resultDiv.innerText = "Error fetching insight: " + e.message;
+            }
+        }
+        window.getExecutiveInsights = getExecutiveInsights; // Expose globally
+
+        // 3. LLM Demo 2: Revenue Strategy Blueprint (Updated logic)
+        async function generateRevenueStrategy() {
+            const challengeInput = document.getElementById('businessChallenge');
+            const resultDiv = document.getElementById('strategyResult');
+            const challenge = challengeInput.value.trim();
+
+            if (!challenge) {
+                resultDiv.innerHTML = "Please describe a business challenge (e.g., 'Low upsell rate in existing accounts').";
+                return;
+            }
+
+            resultDiv.innerHTML = '<span class="text-primary-blue">Formulating VP-level strategy... (This may take a moment)</span>';
+            const prompt = `Given the business challenge: "${challenge}", generate a concise, VP-level strategic recommendation/outline. Focus on 3 main action pillars.`;
+            const systemInstruction = "You are a Vice President of Revenue Operations. Your output must be structured, concise, and focused on measurable outcomes and high-level execution, using bullet points for the outline.";
+
+            try {
+                const responseText = await callGeminiApi(prompt, systemInstruction);
+                resultDiv.innerText = responseText;
+            } catch (e) {
+                resultDiv.innerText = "Error generating strategy: " + e.message;
+            }
+        }
+        window.generateRevenueStrategy = generateRevenueStrategy; // Expose globally
+
+
+        // 4. Conversion Tracking Mechanism
+        /**
+         * Simulates Google Tag Manager or other analytics tracking for CTA clicks.
+         * @param {string} eventName - The name of the event to log.
+         */
+        function trackConversion(eventName) {
+            console.log(`[ANALYTICS TRACKING EVENT] Conversion event logged: ${eventName}`);
+            // In a real application, this would send data to GTM, GA4, etc.
+        }
+        window.trackConversion = trackConversion; // Make available globally
+
+
+        // 5. Scroll Reveal Logic (Intersection Observer)
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Apply animation when entering viewport
+                        entry.target.classList.add('is-visible');
+                    } else {
+                        // Remove animation when leaving viewport (Bidirectional)
+                        entry.target.classList.remove('is-visible');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }); // 10% visible, offset to trigger slightly earlier
+
+            // Ensure all animatable elements are observed
+            document.querySelectorAll('.reveal-item').forEach(item => {
+                observer.observe(item);
+            });
+            document.querySelectorAll('.card-item').forEach(item => {
+                observer.observe(item);
+            });
+        });
     </script>
 </body>
 </html>
+
